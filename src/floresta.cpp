@@ -6,6 +6,79 @@
 
 using namespace std;
 
+void copiar_floresta(
+    char origem[MAX_LINHAS][MAX_COLUNAS], 
+    char alvo[MAX_LINHAS][MAX_COLUNAS]
+) {
+    for (int lin = 0; lin < MAX_LINHAS; lin++) {    
+        for (int col = 0; col < MAX_COLUNAS; col++) {
+            alvo[lin][col] = origem[lin][col];
+        }
+    } 
+}
+
+bool verif_pos(char floresta[MAX_LINHAS][MAX_COLUNAS], int lin, int col) {
+    return (lin > 0 || col > 0) && floresta[lin][col] == 'T';
+}
+
+bool simular_floresta(
+    char atual[MAX_LINHAS][MAX_COLUNAS], 
+    char prox[MAX_LINHAS][MAX_COLUNAS]
+) {
+    copiar_floresta(atual, prox);
+
+    bool mudou = false;
+
+    for (int lin = 0; lin < MAX_LINHAS; lin++) {    
+        for (int col = 0; col < MAX_COLUNAS; col++) {
+            // se não for fogo, ir pro proximo
+            if (atual[lin][col] != 'F') continue;
+
+            /*
+            (i,  j) = item atual (o do meio)
+
+            (i-1, j-1)  (i-1, j) (i-1, j+1)
+            (i  , j-1)  (i,   j) (i  , j+1)
+            (i+1, j-1)  (i+1, j) (i+1, j+1)
+
+            os if's verificam cada posicao da tabela acima
+            */
+
+            if (verif_pos(atual, lin-1, col-1)) {
+                prox[lin-1][col-1] = 'F';
+                mudou = true;
+            }
+            if (verif_pos(atual, lin-1, col)) {
+                prox[lin-1][col] = 'F';
+                mudou = true;
+            }
+            if (verif_pos(atual, lin-1, col+1)) {
+                prox[lin-1][col+1] = 'F';
+                mudou = true;
+            }
+            if (verif_pos(atual, lin, col-1)) {prox[lin][col-1] = 'F'; mudou = true;}
+            if (verif_pos(atual, lin, col)) {prox[lin][col] = 'F'; mudou = true;}
+            if (verif_pos(atual, lin, col+1)) {prox[lin][col+1] = 'F'; mudou = true;}
+            if (verif_pos(atual, lin+1, col-1)) {prox[lin+1][col-1] = 'F'; mudou = true;}
+            if (verif_pos(atual, lin+1, col)) {prox[lin+1][col] = 'F'; mudou = true;}
+            if (verif_pos(atual, lin+1, col+1)) {prox[lin+1][col+1] = 'F'; mudou = true;}
+        }
+    }
+
+    copiar_floresta(prox, atual);
+    
+    return mudou;
+}
+
+void printar_floresta(char floresta[MAX_LINHAS][MAX_COLUNAS]) {
+    for (int lin = 0; lin < MAX_LINHAS; lin++) {    
+        for (int col = 0; col < MAX_COLUNAS; col++) {
+            cout << floresta[lin][col] << " ";
+        }
+        cout << endl;
+    }
+}
+
 void preenche_linha(char vetor[], char caractere) {
     for (int i = 0; i < MAX_COLUNAS; i++) {
         vetor[i] = caractere;

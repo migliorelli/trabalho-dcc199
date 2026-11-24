@@ -4,18 +4,21 @@
 using namespace std;
 
 int main() {
-    char matriz[MAX_LINHAS][MAX_COLUNAS];
+    char atual[MAX_LINHAS][MAX_COLUNAS];
+    char prox[MAX_LINHAS][MAX_COLUNAS];
 
-    if (!ler_arquivo("floresta.txt", matriz)) {
+    if (!ler_arquivo("floresta.txt", atual)) {
         return 1;
     }
+    
+    while (true) {
+        printar_floresta(atual);
+        
+        bool mudou = simular_floresta(atual, prox);
+        if (!mudou) break;
 
-    for (int linha = 0; linha < MAX_LINHAS; linha++) {
-        cout << endl;
-
-        for (int coluna = 0; coluna < MAX_COLUNAS; coluna++) {
-            cout << matriz[linha][coluna] << " ";
-        }
+        system("sleep 1");
+        system("clear");
     }
 
     return 0;

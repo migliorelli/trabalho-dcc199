@@ -10,6 +10,14 @@ int funcao( char vet1[5][5]){
     char vet_area['a'];
     int floresta;
 
+    {
+        {'t', 'f', 't', 'a', 't'},
+        {'t', 'f', 't', 'a', 't'},
+        {'t', 'f', 't', 'a', 't'},
+        {'t', 'f', 't', 'a', 't'},
+        {'t', 'f', 't', 'a', 't'},
+    }
+
     for (int i = line - 1; i <= line + 1; i++) {
     for (int j = colun - 1; j <= colun + 1; j++) {
     if (vet1[i][j] == 'T') {
