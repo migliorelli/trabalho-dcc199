@@ -10,16 +10,27 @@ int main() {
     if (!ler_arquivo("floresta.txt", atual)) {
         return 1;
     }
-    
+
+    int turnos = 0;
     while (true) {
+        cout << "Jogo da floresta." << endl << endl;
         printar_floresta(atual);
         
         bool mudou = simular_floresta(atual, prox);
-        if (!mudou) break;
+        turnos++;
+
+        if (!mudou) break;        
 
         system("sleep 1");
         system("clear");
     }
+    
+    apagar_fogo(atual);
+    
+    system("clear");
+    printar_floresta(atual);
+
+    cout << endl << "O jogo acabou em " << turnos << " turnos.";
 
     return 0;
 }

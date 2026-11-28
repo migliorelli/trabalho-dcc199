@@ -18,7 +18,19 @@ void copiar_floresta(
 }
 
 bool verif_pos(char floresta[MAX_LINHAS][MAX_COLUNAS], int lin, int col) {
-    return (lin > 0 || col > 0) && floresta[lin][col] == 'T';
+    return lin >= 0 && lin < MAX_LINHAS &&
+           col >= 0 && col < MAX_COLUNAS &&
+           floresta[lin][col] == 'T';
+}
+
+void apagar_fogo(char floresta[MAX_LINHAS][MAX_COLUNAS]) {
+    for (int lin = 0; lin < MAX_LINHAS; lin++) {
+        for (int col = 0; col < MAX_COLUNAS; col++) {
+            if (floresta[lin][col] == 'F') {
+                floresta[lin][col] = '.';
+            }
+        }
+    }
 }
 
 bool simular_floresta(
@@ -44,24 +56,18 @@ bool simular_floresta(
             os if's verificam cada posicao da tabela acima
             */
 
-            if (verif_pos(atual, lin-1, col-1)) {
-                prox[lin-1][col-1] = 'F';
-                mudou = true;
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if (i == 0 && j == 0) continue;
+
+                    if (verif_pos(atual, lin + i, col + j)) {
+                        prox[lin + i][col + j] = 'F';
+                        mudou = true;
+                    }
+                }
             }
-            if (verif_pos(atual, lin-1, col)) {
-                prox[lin-1][col] = 'F';
-                mudou = true;
-            }
-            if (verif_pos(atual, lin-1, col+1)) {
-                prox[lin-1][col+1] = 'F';
-                mudou = true;
-            }
-            if (verif_pos(atual, lin, col-1)) {prox[lin][col-1] = 'F'; mudou = true;}
-            if (verif_pos(atual, lin, col)) {prox[lin][col] = 'F'; mudou = true;}
-            if (verif_pos(atual, lin, col+1)) {prox[lin][col+1] = 'F'; mudou = true;}
-            if (verif_pos(atual, lin+1, col-1)) {prox[lin+1][col-1] = 'F'; mudou = true;}
-            if (verif_pos(atual, lin+1, col)) {prox[lin+1][col] = 'F'; mudou = true;}
-            if (verif_pos(atual, lin+1, col+1)) {prox[lin+1][col+1] = 'F'; mudou = true;}
+
+            prox[lin][col] = '.';
         }
     }
 
@@ -95,14 +101,12 @@ bool ler_arquivo(string nome_arquivo, char matriz[MAX_LINHAS][MAX_COLUNAS]) {
     }
 
     
-    arquivo.ignore();
-    
     string linha;
     int num_linhas = 0;
 
     while (getline(arquivo, linha)) {
 
-        if (num_linhas > MAX_LINHAS) {
+        if (num_linhas >= MAX_LINHAS) {
             cout << "Máximo de linhas excedido. Máximo: "
                 << MAX_LINHAS << "; Arquivo: "
                 << num_linhas << endl;
